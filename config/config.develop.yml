@@ -1,0 +1,20 @@
+appname: develop
+
+mysql:
+  host:     192.168.176.9
+  user:     u_tlv
+  password: "#NbXv;a4%^2sGaf"
+  port:     3306
+  database: douyin
+  charset: utf8mb4
+  maxactive: 3
+  maxidle: 1
+  logdebug: true
+
+redis:
+  host: 192.168.176.9
+  password:
+  port: 6379
+  maxactive: 3
+  maxidle: 1
+  idletimeout: 0
