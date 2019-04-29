@@ -1,4 +1,4 @@
-package Account
+package Models
 
 import (
 	"douyin/app/Constants"

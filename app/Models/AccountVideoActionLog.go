@@ -1,4 +1,4 @@
-package AccountVideoActionLog
+package Models
 
 import (
 	"douyin/orm"

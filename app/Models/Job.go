@@ -1,6 +1,4 @@
-package Job
-
-import "douyin/app/Models/BitMap"
+package Models
 
 type TableJob struct {
 	Id           uint64
@@ -23,5 +21,5 @@ func GetJob(accountId uint64) bool {
 	var jobId = "1"
 	var actionId int64 = 1
 	//匹配帐号与任务是否可用
-	return BitMap.CheckAccountValidForJob(jobId, actionId, accountId)
+	return CheckAccountValidForJob(jobId, actionId, accountId)
 }

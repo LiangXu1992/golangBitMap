@@ -1,8 +1,7 @@
 package main
 
 import (
-	"douyin/app/Models/Account"
-	"douyin/app/Models/Job"
+	"douyin/app/Models"
 	"douyin/app/Schedules"
 	"douyin/config"
 	"douyin/orm"
@@ -31,7 +30,7 @@ func main() {
 	//帐号放进去channel
 	for {
 		//先简单完成，把数据库内的所有有效帐号写入
-		var TableAccount Account.TableAccount
+		var TableAccount Models.TableAccount
 		var rows = TableAccount.GetValidRows()
 		for _, row := range rows {
 			accountChannel <- row.Id
@@ -43,7 +42,7 @@ func worker(ch chan uint64) {
 	for {
 		accountId := <-ch
 		//获取任务
-		var boolResult = Job.GetJob(accountId)
+		var boolResult = Models.GetJob(accountId)
 		if boolResult == false {
 			time.Sleep(time.Second * 1)
 			log.Println("no do job")

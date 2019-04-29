@@ -1,4 +1,4 @@
-package BitMap
+package Models
 
 import (
 	"douyin/app/Constants"
