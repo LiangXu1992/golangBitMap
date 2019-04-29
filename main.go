@@ -21,28 +21,34 @@ func main() {
 	orm.Start()
 	//初始化定时任务
 	Schedules.Start()
-	//创建channel
-	var accountChannel = make(chan uint64, 1)
+	var TableAccount Models.TableAccount
+	//创建accountChannel
+	var tmpRow = orm.Gorm.Select("max(id) max_id").Row()
+	var accountChannelLen = 0
+	_ = tmpRow.Scan(&accountChannelLen)
+	//防止channel阻塞
+	var accountChannel = make(chan uint64, accountChannelLen*2)
+	//新建jobStruct
+	var job = Models.JobStruct{
+		JobMap: make(map[uint64]*Models.TableJob),
+	}
+	job.LoadHistoryJob()
 	//新建worker
 	for i := 0; i < 1; i++ {
-		go worker(accountChannel)
+		go worker(&job, accountChannel)
 	}
 	//帐号放进去channel
-	for {
-		//先简单完成，把数据库内的所有有效帐号写入
-		var TableAccount Models.TableAccount
-		var rows = TableAccount.GetValidRows()
-		for _, row := range rows {
-			accountChannel <- row.Id
-		}
+	var rows = TableAccount.GetValidRows()
+	for _, row := range rows {
+		accountChannel <- row.Id
 	}
 }
 
-func worker(ch chan uint64) {
+func worker(job *Models.JobStruct, ch chan uint64) {
+
 	for {
-		accountId := <-ch
-		//获取任务
-		var boolResult = Models.GetJob(accountId)
+		//执行任务
+		var boolResult = job.ExecJob(ch)
 		if boolResult == false {
 			time.Sleep(time.Second * 1)
 			log.Println("no do job")

@@ -15,7 +15,7 @@ var VideoLikeMap map[string]*BitMap = make(map[string]*BitMap)
 var videoCommentLock sync.Mutex
 
 //设置bitmap
-func SetBit(actionId int64, VideoId string, AccountId uint64) bool {
+func SetBit(VideoId string, actionId int64, AccountId uint64) bool {
 	if AccountId <= 0 {
 		return false
 	}
@@ -70,7 +70,7 @@ func CheckAccountValidForJob(videoId string, actionId int64, accountId uint64) b
 	switch actionId {
 	case Constants.ACCOUNT_VIDEO_ACTION_ID_LIKE: //video like
 		//获取bit上的值，进行&计算
-		if VideoLikeMap[videoId].bit[idx]>>pos&0x01 == 1 {
+		if VideoLikeMap[videoId].bit[idx]&0x01<<pos == 1 {
 			//账号已经使用过
 			return false
 		} else {
@@ -81,7 +81,7 @@ func CheckAccountValidForJob(videoId string, actionId int64, accountId uint64) b
 	case Constants.ACCOUNT_VIDEO_ACTION_ID_COMMENT:
 		//video comment
 		//获取bit上的值，进行&计算
-		if VideoCommentMap[videoId].bit[idx]>>pos&0x01 == 1 {
+		if VideoCommentMap[videoId].bit[idx]&0x01<<pos == 1 {
 			//账号已经使用过
 			return false
 		} else {
