@@ -70,6 +70,11 @@ func CheckAccountValidForJob(videoId string, actionId int64, accountId uint64) b
 	switch actionId {
 	case Constants.ACCOUNT_VIDEO_ACTION_ID_LIKE: //video like
 		//获取bit上的值，进行&计算
+		var _, ok = VideoLikeMap[videoId]
+		if !ok {
+			//创建视频like的bitmap
+			VideoLikeMap[videoId] = &BitMap{make([]uint64, Constants.DefaultBitmapLen, Constants.DefaultBitmapCap), Constants.DefaultBitmapCap}
+		}
 		if VideoLikeMap[videoId].bit[idx]&0x01<<pos == 1 {
 			//账号已经使用过
 			return false
@@ -78,8 +83,12 @@ func CheckAccountValidForJob(videoId string, actionId int64, accountId uint64) b
 			VideoLikeMap[videoId].bit[idx] |= 0x01 << pos
 			return true
 		}
-	case Constants.ACCOUNT_VIDEO_ACTION_ID_COMMENT:
-		//video comment
+	case Constants.ACCOUNT_VIDEO_ACTION_ID_COMMENT: //video comment
+		var _, ok = VideoCommentMap[videoId]
+		if !ok {
+			//创建视频like的bitmap
+			VideoCommentMap[videoId] = &BitMap{make([]uint64, Constants.DefaultBitmapLen, Constants.DefaultBitmapCap), Constants.DefaultBitmapCap}
+		}
 		//获取bit上的值，进行&计算
 		if VideoCommentMap[videoId].bit[idx]&0x01<<pos == 1 {
 			//账号已经使用过

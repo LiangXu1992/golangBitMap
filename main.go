@@ -5,6 +5,8 @@ import (
 	"douyin/app/Schedules"
 	"douyin/config"
 	"douyin/orm"
+	"douyin/routes"
+	"github.com/gin-gonic/gin"
 	"log"
 	"time"
 )
@@ -34,7 +36,7 @@ func main() {
 	}
 	job.LoadHistoryJob()
 	//新建worker
-	for i := 0; i < 1; i++ {
+	for i := 0; i < 10; i++ {
 		go worker(&job, accountChannel)
 	}
 	//帐号放进去channel
@@ -42,10 +44,16 @@ func main() {
 	for _, row := range rows {
 		accountChannel <- row.Id
 	}
+
+	//api服务
+	//初始化路由
+	router := gin.New()
+	routes.Start(router)
+	//启动端口服务
+	_ = router.Run(":6789") // listen and serve on 0.0.0.0:8080
 }
 
 func worker(job *Models.JobStruct, ch chan uint64) {
-
 	for {
 		//执行任务
 		var boolResult = job.ExecJob(ch)
