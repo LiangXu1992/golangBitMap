@@ -25,7 +25,7 @@ func main() {
 	Schedules.Start()
 	var TableAccount Models.TableAccount
 	//创建accountChannel
-	var tmpRow = orm.Gorm.Select("max(id) max_id").Row()
+	var tmpRow = orm.Gorm.Table((&(Models.TableAccount{})).TableName()).Select("max(id) max_id").Row()
 	var accountChannelLen = 0
 	_ = tmpRow.Scan(&accountChannelLen)
 	//防止channel阻塞

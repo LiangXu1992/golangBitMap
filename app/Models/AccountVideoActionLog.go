@@ -18,8 +18,8 @@ func (t *TableAccountVideoActionLog) TableName() string {
 	return "account_video_action_log"
 }
 
-func (t *TableAccountVideoActionLog) GetRows(ActionId int64) TableAccountVideoActionLogRows {
+func (t *TableAccountVideoActionLog) GetRows(where map[string]interface{}) TableAccountVideoActionLogRows {
 	var rows TableAccountVideoActionLogRows
-	orm.Gorm.Where("action_id = ?", ActionId).Find(&rows)
+	orm.Gorm.Where(where).Find(&rows)
 	return rows
 }

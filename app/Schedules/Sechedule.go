@@ -1,16 +1,15 @@
 package Schedules
 
 import (
-	"douyin/app/Constants"
 	"douyin/app/Models"
 )
 
 //加载数据库日志到bitMap
 func loadLog2Bitmap() {
 	var TableLog Models.TableAccountVideoActionLog
-	var rows = TableLog.GetRows(Constants.ACCOUNT_VIDEO_ACTION_ID_LIKE)
+	var rows = TableLog.GetRows(map[string]interface{}{})
 	for _, row := range rows {
-		Models.SetBit(row.VideoId, row.ActionId, row.AccountId)
+		Models.CreateVideoBitMap(row.VideoId, row.ActionId, row.AccountId)
 	}
 }
 
